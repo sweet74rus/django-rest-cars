@@ -8,9 +8,22 @@ from .serializers import CarsSerializer
 
 class CarsAPIView(APIView):
     def get(self, request):
-        l = Cars.objects.all().values()
-        return Response({'cars': list(l)})
+        l = Cars.objects.all()
+        return Response({'cars': CarsSerializer(l, many=True).data})
 
-# class CarsAPIView(generics.ListAPIView):
-#     queryset = Cars.objects.all()
-#     serializer_class = CarsSerializer
+    def post(self, request):
+        serializer = CarsSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        car_new = Cars.objects.create(
+            title=request.data['title'],
+            description=request.data['description'],
+            body_type=request.data['body_type'],
+            engine_type=request.data['engine_type'],
+            color=request.data['color'],
+            price=request.data['price'],
+            cat_id=request.data['cat_id']
+        )
+
+        return Response({'car': CarsSerializer(car_new).data})
+
