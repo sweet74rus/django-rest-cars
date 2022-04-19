@@ -19,8 +19,9 @@ from cars.views import *
 
 from rest_framework import routers
 
-router = routers.SimpleRouter()
-router.register(r'cars', CarsViewSet)
+router = routers.DefaultRouter()
+router.register(r'cars', CarsViewSet, basename='cars')
+print(router.urls)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
